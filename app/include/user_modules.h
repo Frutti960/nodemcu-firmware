@@ -1,6 +1,6 @@
 #ifndef __USER_MODULES_H__
 #define __USER_MODULES_H__
-
+#define LUA_USE_MODULES_CAESAR
 #ifndef LUA_CROSS_COMPILER
 
 // The default configuration is designed to run on all ESP modules including the 512 KB modules like ESP-01 and only
