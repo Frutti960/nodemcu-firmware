@@ -8,10 +8,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Cache toolchain
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: cache
           key: toolchain-${{ hashFiles('Makefile') }}
@@ -21,7 +21,7 @@ jobs:
           docker run --rm -v ${{ github.workspace }}:/opt/nodemcu-firmware marcelstoer/nodemcu-build build
       
       - name: Upload firmware
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: nodemcu-firmware
           path: bin/
