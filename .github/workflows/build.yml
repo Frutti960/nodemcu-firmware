@@ -2,37 +2,18 @@ name: Build
 
 on:
   workflow_dispatch:
-  push:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-      
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y make unzip tar wget python3 python3-pip python3-serial
-      
-      - name: Download and install toolchain
-        run: |
-          wget -q https://github.com/espressif/crosstool-NG/releases/download/esp-12.2.0-2019-10-02/xtensa-lx106-elf-linux64-1.22.0-100-ge567ec7-5.2.0.tar.gz
-          sudo mkdir -p /opt/xtensa-lx106-elf
-          sudo tar -xf xtensa-lx106-elf-linux64-1.22.0-100-ge567ec7-5.2.0.tar.gz -C /opt/xtensa-lx106-elf --strip-components=1
-          echo "/opt/xtensa-lx106-elf/bin" >> $GITHUB_PATH
-      
-      - name: Verify toolchain
-        run: |
-          /opt/xtensa-lx106-elf/bin/xtensa-lx106-elf-gcc --version
       
       - name: Build firmware
         run: |
-          export PATH=/opt/xtensa-lx106-elf/bin:$PATH
-          make clean
-          make -j$(nproc)
+          docker run --rm \
+            -v ${{ github.workspace }}:/opt/nodemcu-firmware \
+            marcelstoer/nodemcu-build build
       
       - name: Upload firmware
         uses: actions/upload-artifact@v4
