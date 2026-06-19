@@ -17,19 +17,16 @@ jobs:
           sudo apt update
           sudo apt install -y make unzip tar wget python3 python3-pip python3-serial
       
-      - name: Cache toolchain
-        id: cache-toolchain
-        uses: actions/cache@v4
-        with:
-          path: /opt/xtensa-lx106-elf
-          key: toolchain-${{ runner.os }}-20240225
-      
-      - name: Download toolchain
-        if: steps.cache-toolchain.outputs.cache-hit != 'true'
+      - name: Download and install toolchain
         run: |
-          wget -q https://github.com/nodemcu/nodemcu-toolchain/releases/download/2019-07-31/xtensa-lx106-elf-linux64-20190731.tar.gz
+          wget -q https://github.com/espressif/crosstool-NG/releases/download/esp-12.2.0-2019-10-02/xtensa-lx106-elf-linux64-1.22.0-100-ge567ec7-5.2.0.tar.gz
           sudo mkdir -p /opt/xtensa-lx106-elf
-          sudo tar -xf xtensa-lx106-elf-linux64-20190731.tar.gz -C /opt/xtensa-lx106-elf
+          sudo tar -xf xtensa-lx106-elf-linux64-1.22.0-100-ge567ec7-5.2.0.tar.gz -C /opt/xtensa-lx106-elf --strip-components=1
+          echo "/opt/xtensa-lx106-elf/bin" >> $GITHUB_PATH
+      
+      - name: Verify toolchain
+        run: |
+          /opt/xtensa-lx106-elf/bin/xtensa-lx106-elf-gcc --version
       
       - name: Build firmware
         run: |
